@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import * as Notifications from "expo-notifications";
-import registerNNPushToken from "native-notify";
+import registerNNPushToken, { addNotificationReceivedListener } from "../services/PushNotifications";
 import {
   saveNotifications,
   findNotifications,
@@ -92,7 +91,7 @@ const Notification = ({ navigation }) => {
       stompClient.activate();
 
       const foregroundSubscription =
-        Notifications.addNotificationReceivedListener((notification) => {
+        addNotificationReceivedListener((notification) => {
           console.log("Received notification:", notification);
           if (
             notification &&

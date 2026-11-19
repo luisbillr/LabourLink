@@ -15,7 +15,7 @@ const styles = {
   card: {
     width: 120, // Adjust the width as needed
     height: 75, // Adjust the height as needed
-    margin:27,
+    margin: 8,
     marginTop:0.5,// Add any other styling properties as necessary
     shadowColor: "#000",
     shadowOffset: {
@@ -36,8 +36,7 @@ const styles = {
     // flex: 1,
     // justifyContent: 'center',
     // alignItems: 'center',
-    marginTop: '100',
-    fontsize:''
+    paddingTop: 12,
    },
   centerText: {
     textAlign: 'center',

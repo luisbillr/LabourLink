@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import SignInWithGoogle from '../../components/SignInWithGoogle' // signInWithGoogle component importerd.
 import SignupHead from '../../components/SignUpHead';
 import { useNavigation } from '@react-navigation/native'; 
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as yup from 'yup';
@@ -15,6 +16,8 @@ import JobRoleModel from '../../components/JobRoleModel';
 import PasswordModel from '../../components/PasswordModel';
 import { useLogin } from '../../context/LoginProvider';
 const LabourSignUpForm = () => {
+  const headerHeight = useHeaderHeight();
+  const insets = useSafeAreaInsets();
 
   const navigation = useNavigation(); 
   const { setIsLoggedIn } = useLogin();
@@ -156,9 +159,9 @@ const LabourSignUpForm = () => {
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : null} // Adjust behavior for iOS and Android
-        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Adjust vertical offset for iOS
+        keyboardVerticalOffset={headerHeight}
       >
-      <ScrollView>
+      <ScrollView contentContainerStyle={[styles.scrollContainer, { paddingBottom: insets.bottom + 24 }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <View style={styles.innerContainer}>
         {regError && <Text style={styles.error}>{regError}</Text>}
 
@@ -206,17 +209,10 @@ const LabourSignUpForm = () => {
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={passwordVisibility}
+                  right={<TextInput.Icon icon={passwordVisibility ? 'eye-off' : 'eye'} onPress={handlePasswordVisibility} />}
                   style={[styles.input, mState && { backgroundColor: '#797979' }]}
                 />
-                  <TouchableOpacity
-                    style={{
-                        marginTop: -45,
-                        marginLeft: 270,
-                    }}
-                    onPress={handlePasswordVisibility}
-                  >
-                  <Icon name={rightIcon} size={20} color="black" />
-                  </TouchableOpacity>   
+
               </View>
               {errors.password && <Text style={styles.error}>{errors.password}</Text>}
             </View>
@@ -233,18 +229,10 @@ const LabourSignUpForm = () => {
                   value={confirmPassword}
                   onChangeText={setconfirmPassword}
                   secureTextEntry={passwordVisibility}
+                  right={<TextInput.Icon icon={passwordVisibility ? 'eye-off' : 'eye'} onPress={handlePasswordVisibility} />}
                   style={[styles.input, mState && { backgroundColor: '#797979' }]}
                 />
-                 <TouchableOpacity
-                    style={[{
-                        marginTop: -45,
-                        marginLeft: 270,
-                    },  mState && { backgroundColor: '#797979' }]}
-                    onPress={handlePasswordVisibility}
-                >
-                  {/* eye icon  */}
-                <Icon name={rightIcon} size={20} color="black" />
-                </TouchableOpacity> 
+
               </View>
               {errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword}</Text>}
             </View>
@@ -313,15 +301,19 @@ const styles = StyleSheet.create({
     // marginTop:20,
     paddingBottom:40,
 
-    marginLeft: 40 ,
-    width: '80%',
+    paddingHorizontal: 24,
+    maxWidth: 480,
+    alignSelf: 'center',
+    width: '100%',
     // height:'70%'
   },
    scrollContainer: {
     flexGrow: 1,
   },
+  container: {
+    flex: 1,
+  },
   inputContainer:{
-    zIndex: -1,
     marginVertical: 8,
     gap: 2,
   },

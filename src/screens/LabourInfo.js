@@ -20,7 +20,7 @@ import { getLabourByRating } from "../services/LabourDetailsService";
 import { getLabourByTotalservice } from "../services/LabourDetailsService";
 import { Button } from "react-native-paper";
 import LabourPerformanceModel from "../components/LabourPerfomanceModel";
-import {updateUserStatus} from "../services/userService"
+import { updateUserStatus } from "../services/userService";
 
 // LabourInfo component definition
 const LabourInfo = () => {
@@ -30,7 +30,7 @@ const LabourInfo = () => {
   const { email, JobRole, ProfileImage } = route.params;
   const jobRole = JobRole.toUpperCase();
   const tempProfile =
-    "https://firebasestorage.googleapis.com/v0/b/labourlink-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583";
+    "https://firebasestorage.googleapis.com/v0/b/ToReparo-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583";
 
   useEffect(() => {
     fetchLabour(email);
@@ -122,8 +122,8 @@ const LabourInfo = () => {
     });
   };
   const handlePressChat = () => {
-    updateUserStatusToDB(labour)
-    navigation.navigate("ChatAreaScreen",{
+    updateUserStatusToDB(labour);
+    navigation.navigate("ChatAreaScreen", {
       SelectedUserName: labour.name,
       SelectedUserEmail: email,
     });

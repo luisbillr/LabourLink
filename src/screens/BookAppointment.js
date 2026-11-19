@@ -53,7 +53,7 @@ const BookAppointment = () => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [timePicked, setTimePicked] = useState(false);
   const tempProfile =
-    "https://firebasestorage.googleapis.com/v0/b/labourlink-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583";
+    "https://firebasestorage.googleapis.com/v0/b/ToReparo-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583";
   const [customerId, setCustomerId] = useState("");
   const [customerName, setCustomerName] = useState("");
 
@@ -121,7 +121,7 @@ const BookAppointment = () => {
         values.startTime,
         "PENDING",
         values.jobDescription,
-        jobRole.toUpperCase()
+        jobRole.toUpperCase(),
       );
       Alert.alert("Success", "Booking has been made successfully.");
       console.log("Booking response: ", response.data);
@@ -151,7 +151,7 @@ const BookAppointment = () => {
       },
       body: JSON.stringify({
         appId: 22199,
-        appToken: 'emBddOfJLNr511DDJxUMcI',
+        appToken: "emBddOfJLNr511DDJxUMcI",
         title: notification.title,
         message: notification.message,
         // userId: notification.recipient,
@@ -183,7 +183,7 @@ const BookAppointment = () => {
       },
       body: JSON.stringify({
         appId: 22199,
-        appToken: 'emBddOfJLNr511DDJxUMcI',
+        appToken: "emBddOfJLNr511DDJxUMcI",
         title: notification.title,
         message: notification.message,
         // userId: notification.recipient,
@@ -265,8 +265,8 @@ const BookAppointment = () => {
                       date.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
-                        hour12: false
-                      })
+                        hour12: false,
+                      }),
                     ); // Set Formik field value
                   }}
                 />

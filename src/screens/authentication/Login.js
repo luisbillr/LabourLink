@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   TextInput,
   Button,
@@ -10,10 +11,9 @@ import {
 } from "react-native-paper";
 import { TouchableRipple, IconButton } from "react-native-paper";
 import SignInWithGoogle from "../../components/SignInWithGoogle";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { registerIndieID } from 'native-notify';
+import { registerIndieID } from '../../services/PushNotifications';
 
 import * as yup from "yup";
 import {
@@ -24,6 +24,7 @@ import {
 import { useLogin } from "../../context/LoginProvider";
 
 const Login = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const { setIsLoggedIn } = useLogin();
   const { setUserRole } = useLogin();
@@ -146,7 +147,12 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
       <View style={styles.innerContainer}>
         <View>
           {/* App head tittle */}
@@ -207,7 +213,7 @@ const Login = () => {
             </TouchableOpacity>
           </View>
           {errors.role && (
-            <Text style={[styles.error, { marginLeft: 80, marginTop: 5 }]}>
+            <Text style={[styles.error, { marginTop: 5 }]}>
               {errors.role}
             </Text>
           )}
@@ -238,20 +244,13 @@ const Login = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry={passwordVisibility}
+            right={<TextInput.Icon icon={passwordVisibility ? 'eye-off' : 'eye'} onPress={handlePasswordVisibility} />}
             style={styles.input}
             // error={errors.password}
           />
 
           {/* eye icon button */}
-          <TouchableOpacity
-            style={{
-              marginTop: -50,
-              marginLeft: 270,
-            }}
-            onPress={handlePasswordVisibility}
-          >
-            <Icon name={rightIcon} size={20} color="black" />
-          </TouchableOpacity>
+
           {errors.password && (
             <Text style={[styles.error, { marginTop: 25 }]}>
               {errors.password}
@@ -290,7 +289,8 @@ const Login = () => {
           signState="Sign up"
         />
       </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -301,14 +301,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
 
-    justifyContent: "center",
-    //   alignItems: 'center',
-    paddingLeft: 50,
     width: "100%",
   },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
   innerContainer: {
-    marginTop: 90,
-    width: "90%",
+    width: "100%",
+    maxWidth: 480,
+    alignSelf: 'center',
   },
   input: {
     width: "100%",
@@ -332,7 +335,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 15,
     // alignItems: 'center',
-    width: "200",
+    width: "100%",
   },
   toggleRoleContainer: {
     flex: 1,
@@ -344,12 +347,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // marginBottom: 20,
     marginTop: 20,
-    marginLeft: 30,
+    width: '100%',
   },
   toggleButtonContainer: {
     marginBottom: 20,
   },
   toggleButton: {
+    flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderWidth: 1,
@@ -372,6 +376,7 @@ const styles = StyleSheet.create({
   },
   toggleButtonText: {
     fontSize: 16,
+    textAlign: 'center',
   },
   activeButton: {
     backgroundColor: "#F97300",

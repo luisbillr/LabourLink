@@ -1,0 +1,54 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const Module = require('node:module');
+const crypto = require('node:crypto');
+const babel = require('@babel/core');
+process.env.EXPO_PUBLIC_API_URL = process.env.TEST_API_URL || 'http://127.0.0.1:5088/api/v1';
+global.__DEV__ = false;
+let storedRefresh = null;
+const code = babel.transformSync(fs.readFileSync('src/services/api.js', 'utf8'), { configFile: false, babelrc: false, plugins: ['@babel/plugin-transform-modules-commonjs'] }).code;
+const moduleUnderTest = new Module(require('node:path').resolve('src/services/api.js'), module);
+moduleUnderTest.filename = require('node:path').resolve('src/services/api.js');
+moduleUnderTest.paths = module.paths;
+moduleUnderTest.require = (name) => name === './refreshStorage' ? { readRefresh: async () => storedRefresh, writeRefresh: async (value) => { storedRefresh = value; } } : require(name);
+moduleUnderTest._compile(code, moduleUnderTest.filename);
+const client = moduleUnderTest.exports;
+function expiredToken(user) {
+  const key = process.env.TEST_JWT_KEY;
+  if (!key) throw new Error('TEST_JWT_KEY must match the isolated test API signing key.');
+  const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  const body = `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode({ sub: user.id, 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': user.role, iss: 'ToReparo', aud: 'ToReparo.App', exp: 1 })}`;
+  return `${body}.${crypto.createHmac('sha256', key).update(body).digest('base64url')}`;
+}
+(async () => {
+  const email = `client-http-${Date.now()}@example.test`;
+  let events = 0;
+  const unsubscribe = client.onSession(() => events++);
+  const user = await client.signUp('CUSTOMER', { name: 'Client HTTP', email, password: 'ClientTest!123', mobileNumber: '+1 5551234567', address: 'Test location' });
+  assert.equal(user.role, 'CUSTOMER');
+  assert.ok(storedRefresh);
+  const me = await client.api.get('/customers/me');
+  assert.equal(me.name, 'Client HTTP');
+  assert.ok(!('Success' in me), 'The envelope is unwrapped centrally');
+  const oldRefresh = storedRefresh;
+  await client.saveSession({ user, accessToken: expiredToken(user), refreshToken: oldRefresh });
+  events = 0;
+  const results = await Promise.all([client.api.get('/customers/me'), client.api.get('/auth/me'), client.api.get('/customers/me')]);
+  assert.equal(results[0].id, me.id);
+  assert.equal(results[1].id, user.id);
+  assert.equal(events, 1, 'Concurrent 401s share one refresh');
+  assert.notEqual(storedRefresh, oldRefresh, 'Refresh rotates');
+  await client.clearSession();
+  assert.equal(storedRefresh, null);
+  await client.signIn(email, 'ClientTest!123');
+  assert.ok(storedRefresh);
+  await client.signOut();
+  assert.equal(storedRefresh, null);
+  let error;
+  try { await client.signIn(email, 'WrongPassword'); } catch (e) { error = e; }
+  assert.ok(client.errorMessage(error).includes('incorrectos'));
+  const validation = { response: { data: { Message: 'Invalid', Data: { password: ['At least 8 characters'] } } } };
+  assert.equal(client.errorMessage(validation), 'At least 8 characters');
+  unsubscribe();
+  console.log('PASS: 13 assertions. Real API and PostgreSQL; only platform credential storage is in-memory for this test.');
+})().catch((error) => { console.error(error); process.exitCode = 1; });

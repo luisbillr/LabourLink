@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Modal, Portal, Provider as PaperProvider, Headline, IconButton } from 'react-native-paper';
+import { Button, Modal, Portal, Headline, IconButton } from 'react-native-paper';
 
 const PasswordModel = ({onMStateChange, marginTop, Password}) => {
   const [visible, setVisible] = React.useState(false);
@@ -14,7 +14,7 @@ const PasswordModel = ({onMStateChange, marginTop, Password}) => {
   };
 
   return (
-    <PaperProvider>
+    <View>
       <Portal>
          <Modal visible={visible} onDismiss={hideModal}
           overlayOpacity={0} 
@@ -46,7 +46,7 @@ const PasswordModel = ({onMStateChange, marginTop, Password}) => {
           />
         </View>
       </View>
-    </PaperProvider>
+    </View>
   );
 };
 
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   uploadContainer: {
-    marginTop: -15,
-    marginBottom: -15,
+    marginVertical: 0,
   },
 });

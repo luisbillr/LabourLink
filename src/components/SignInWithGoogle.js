@@ -55,9 +55,6 @@ const SignInWithGoogle = (props) => {
               <Text style={[styles.signUpLink, ]}>{props.signState}</Text>
           </TouchableRipple>
       </View> 
-      <View style={{ marginBottom: 120 }}>
-                {/* Your component */}
-          </View>
     </View>
   );
 };
@@ -65,6 +62,7 @@ const SignInWithGoogle = (props) => {
 const styles = StyleSheet.create({
   signInContainer:{
     alignItems: 'center',
+    paddingVertical: 20,
     
     
   },
@@ -93,6 +91,8 @@ const styles = StyleSheet.create({
   },
   signUpContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   dontHaveAccountText: {

@@ -16,7 +16,7 @@ import { getLabourProfileById } from "../services/LabourProfileService";
 import { getLabourById, deleteLabour } from "../services/LabourService";
 import { useLogin } from "../context/LoginProvider";
 import { getProfilePicture } from "../services/ProfilePhotoService";
-import { registerIndieID, unregisterIndieDevice } from 'native-notify';
+import { registerIndieID, unregisterIndieDevice } from '../services/PushNotifications';
 import { useFocusEffect } from "@react-navigation/native";
 
 const Labour_profile_page = ({ navigation, route }) => {

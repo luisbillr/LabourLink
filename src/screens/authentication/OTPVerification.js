@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-paper';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { sendOTP, verifyOTP } from '../../services/AuthService';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -59,13 +58,15 @@ const OTPVerification = () => {
       <View style={styles.foreground}>
         <Text style={styles.foregroundText}>OTP has been sent to {email}</Text>
         <View style={styles.otpContainer}>
-          <OTPInputView
-            style={{ width: '100%', height: 70 }}
-            pinCount={6}
-            // autoFocusOnLoad // Removed this line
-            codeInputFieldStyle={styles.blockStyleBase}
-            // codeInputHighlightStyle={styles.underlineStyleHighLighted}
-            onCodeFilled={(code) => setOTP(code)}
+          <TextInput
+            accessibilityLabel="Six-digit verification code"
+            style={[styles.blockStyleBase, { width: '100%', textAlign: 'center', letterSpacing: 16, fontSize: 24 }]}
+            value={otp}
+            onChangeText={(code) => setOTP(code.replace(/\D/g, '').slice(0, 6))}
+            maxLength={6}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            autoComplete="sms-otp"
           />
           {error && <Text style={{ color: 'red' }}>{error}</Text>}
         </View>

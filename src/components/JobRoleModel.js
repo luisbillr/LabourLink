@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Modal, Portal, PaperProvider, Headline, Chip, Card } from 'react-native-paper';
+import { Button, Modal, Portal, Headline, Chip, Card } from 'react-native-paper';
 import { getLabourJobRoles } from '../services/AuthService';
 
 const JobRoleModel = ({onMStateChange, onJobRolesChange, mState}) => {
@@ -40,7 +40,7 @@ const JobRoleModel = ({onMStateChange, onJobRolesChange, mState}) => {
   };
 
   return (
-    <PaperProvider>
+    <View>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} style={{ backgroundColor: '#797979' }}
         // <Modal visible={visible} onDismiss={hideModal}  
@@ -78,7 +78,7 @@ const JobRoleModel = ({onMStateChange, onJobRolesChange, mState}) => {
           {selectedJobs.length == 0 ? "Select prefered job" : "Edit selected job"}
         </Button>
       </View>
-    </PaperProvider>
+    </View>
   );
 };
 

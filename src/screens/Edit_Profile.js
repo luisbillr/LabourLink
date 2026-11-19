@@ -53,13 +53,13 @@ const Edit_Profile = ({ navigation, route }) => {
     }
 
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ['images', 'videos'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled && result.assets?.length) {
       const uploadURL = await handleSave(result.assets[0].uri);
       if (uploadURL) {
         setImage(uploadURL);

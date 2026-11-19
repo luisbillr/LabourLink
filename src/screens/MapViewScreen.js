@@ -1,12 +1,22 @@
 // MapViewScreen.js
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import MapView, { Marker, Callout } from "react-native-maps";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import MapView, { Marker, Callout } from "../components/PlatformMap";
 import * as Location from "expo-location";
 import LabourProfileComponent from "../components/LabourProfileComponent";
-import { useNavigation , useRoute} from '@react-navigation/native'; 
-import { getLabourByJobRole, getLocationsByJobRole } from "../services/LabourDetailsService";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  getLabourByJobRole,
+  getLocationsByJobRole,
+} from "../services/LabourDetailsService";
 // import {ProfileImageByEmail} from "../services/LabourDetailsService"
 
 const MapViewScreen = () => {
@@ -15,9 +25,6 @@ const MapViewScreen = () => {
     // longitude: 79.90168,
     // latitudeDelta: 0.0922,
     // longitudeDelta: 0.0421,
-    
- 
-  
   };
 
   const [region, setRegion] = useState();
@@ -26,16 +33,13 @@ const MapViewScreen = () => {
   const [LabourLocation, setLabourLocation] = useState([]);
   const navigation = useNavigation();
   const [labourcard, setLabourCard] = useState([]);
-  const tempProfile = "https://firebasestorage.googleapis.com/v0/b/labourlink-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583"
+  const tempProfile =
+    "https://firebasestorage.googleapis.com/v0/b/ToReparo-e7ecf.appspot.com/o/ProfilePhoto%2Fboy.png?alt=media&token=b9013246-c51f-4bb8-b68b-1465e24e8583";
   // const [ProfileImage, setProfileImage] =useState([]);
   const route = useRoute();
   const { jobRole } = route.params;
 
- 
-
   // let jobRole = "PAINTER";
-  
-
 
   useEffect(() => {
     fetchLabour(jobRole);
@@ -43,13 +47,11 @@ const MapViewScreen = () => {
 
   const fetchLabour = (jobRole) => {
     getLabourByJobRole(jobRole)
-      .then(response => {
+      .then((response) => {
         // console.log(response.data);
         setLabourCard(response.data);
-       
-  
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error in fetching labour", error);
       });
   };
@@ -60,11 +62,11 @@ const MapViewScreen = () => {
 
   const fetchLocation = (jobRole) => {
     getLocationsByJobRole(jobRole)
-      .then(response => {
+      .then((response) => {
         // console.log(response.data);
         setLabourLocation(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error in fetching locations", error);
       });
   };
@@ -89,21 +91,15 @@ const MapViewScreen = () => {
     })();
   }, []);
 
-  const handleProfileClick = (labourEmail,profileUri) => {
-    navigation.navigate('LabourInfo', {
+  const handleProfileClick = (labourEmail, profileUri) => {
+    navigation.navigate("LabourInfo", {
       email: labourEmail,
-      JobRole:jobRole ,
-      ProfileImage:profileUri,
-
+      JobRole: jobRole,
+      ProfileImage: profileUri,
     });
   };
 
   // const navigation = useNavigation(); // Get navigation object using useNavigation hook
-
-  
-  
-  
-
 
   return (
     <View style={styles.Mapcomponentcontainer}>
@@ -138,36 +134,53 @@ const MapViewScreen = () => {
                   }}
                 >
                   <Image
-                    source={require('../assets/Labour.png')}
+                    source={require("../assets/Labour.png")}
                     style={styles.markerImage}
                   />
-                    <Callout onPress={() => handleProfileClick(labourLocation.labourId,labourLocation.profileUri)}>
+                  <Callout
+                    onPress={() =>
+                      handleProfileClick(
+                        labourLocation.labourId,
+                        labourLocation.profileUri,
+                      )
+                    }
+                  >
                     <View style={styles.calloutContainer}>
-                     
-                      <Text style={styles.labourName}>{labourLocation.labourName}</Text>
-                       <Text style={styles.labourJobRole}>Rating:{labourLocation.rating}</Text> 
+                      <Text style={styles.labourName}>
+                        {labourLocation.labourName}
+                      </Text>
+                      <Text style={styles.labourJobRole}>
+                        Rating:{labourLocation.rating}
+                      </Text>
                       {/* <TouchableOpacity onPress={() => handleProfileClick(labourLocation.labourEmail)}>
                         <Text style={styles.viewProfileText}>View Profile</Text>
                       </TouchableOpacity> */}
                     </View>
                   </Callout>
-                 
-
-                 
                 </Marker>
               ))}
-        
           </MapView>
           <ScrollView>
             {labourcard.length > 0 ? (
               labourcard.map((labour, index) => (
-                <TouchableOpacity key={index} onPress={() => handleProfileClick(labour.labourEmail,labour.profileUri)}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleProfileClick(labour.labourEmail, labour.profileUri)
+                  }
+                >
                   <LabourProfileComponent
                     profileImage={{
-                      uri: labour.profileUri ? labour.profileUri : tempProfile
+                      uri: labour.profileUri ? labour.profileUri : tempProfile,
                     }}
-                    name={labour.labourName ? labour.labourName : "Name not found"}
-                    jobTitle={labour.jobRole.join(" | ") ? labour.jobRole.join(" | ") : "job Role not found "}
+                    name={
+                      labour.labourName ? labour.labourName : "Name not found"
+                    }
+                    jobTitle={
+                      labour.jobRole.join(" | ")
+                        ? labour.jobRole.join(" | ")
+                        : "job Role not found "
+                    }
                     rating={labour.rating}
                   />
                 </TouchableOpacity>
@@ -207,16 +220,16 @@ const styles = StyleSheet.create({
   markerImage: {
     width: 30,
     height: 30,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   calloutContainer: {
     width: 150,
     padding: 5,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
   },
   labourName: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
   },
   labourJobRole: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Modal, Portal, Provider as PaperProvider, Headline, IconButton } from 'react-native-paper';
+import { Button, Modal, Portal, Headline, IconButton } from 'react-native-paper';
 
 const DocumentModel = ({onMStateChange}) => {
   const [visible, setVisible] = React.useState(false);
@@ -14,7 +14,7 @@ const DocumentModel = ({onMStateChange}) => {
   };
 
   return (
-    <PaperProvider>
+    <View>
       <Portal>
       {/* <Modal visible={visible} onDismiss={hideModal} style={{ backgroundColor: '#797979' }} */}
          <Modal visible={visible} onDismiss={hideModal} overlayBackgroundColor="transparent" // Set overlay background color to transparent
@@ -47,7 +47,7 @@ const DocumentModel = ({onMStateChange}) => {
           />
         </View>
       </View>
-    </PaperProvider>
+    </View>
   );
 };
 

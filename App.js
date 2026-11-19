@@ -1,30 +1,25 @@
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { MD3LightTheme, PaperProvider } from 'react-native-paper';
 
-import { LogBox } from 'react-native';
-
-// Ignore all log notifications
-LogBox.ignoreAllLogs(true);
-// import { StatusBar } from "expo-status-bar";
-// import React, { useState, useContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-// import { createStackNavigator } from "@react-navigation/stack";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import Icon from "react-native-vector-icons/FontAwesome";
-// import { SafeAreaProvider } from "react-native-safe-area-context";
-// import "react-native-gesture-handler";
-import registerNNPushToken from 'native-notify';
-
-
-import MainNavigator from "./src/utils/MainNavigator";
-import LoginProvider from "./src/context/LoginProvider";
-
+import MainNavigator from './src/utils/MainNavigator';
+import LoginProvider from './src/context/LoginProvider';
 
 export default function App() {
-  // registerNNPushToken(22199, 'emBddOfJLNr511DDJxUMcI');
   return (
-    <LoginProvider>
-      <NavigationContainer>
-      <MainNavigator />
-      </NavigationContainer>
-    </LoginProvider> 
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <PaperProvider theme={MD3LightTheme}>
+          <LoginProvider>
+            <NavigationContainer navigationInChildEnabled>
+              <MainNavigator />
+            </NavigationContainer>
+          </LoginProvider>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

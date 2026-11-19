@@ -3,16 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
 import SignInWithGoogle from "../../components/SignInWithGoogle"; // signInWithGoogle component importerd.
 import SignupHead from "../../components/SignUpHead";
 import { useNavigation } from "@react-navigation/native";
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,6 +23,8 @@ import PasswordModel from "../../components/PasswordModel";
 import { useLogin } from "../../context/LoginProvider";
 
 const CustomerSignUpForm = () => {
+  const headerHeight = useHeaderHeight();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const { setIsLoggedIn } = useLogin();
   const { setUserRole } = useLogin();
@@ -141,9 +143,9 @@ const CustomerSignUpForm = () => {
       <KeyboardAvoidingView
         style={[styles.container]}
         behavior={Platform.OS === "ios" ? "padding" : null} // Adjust behavior for iOS and Android
-        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Adjust vertical offset for iOS
+        keyboardVerticalOffset={headerHeight}
       >
-        <ScrollView>
+        <ScrollView contentContainerStyle={[styles.scrollContainer, { paddingBottom: insets.bottom + 24 }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
           <View style={[styles.innerContainer, mState && { backgroundColor: 'rgba(0, 0, 0, 0.008)' } ]}>
             {regError && <Text style={styles.error}>{regError}</Text>}
 
@@ -191,19 +193,12 @@ const CustomerSignUpForm = () => {
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={passwordVisibility}
+                  right={<TextInput.Icon icon={passwordVisibility ? 'eye-off' : 'eye'} onPress={handlePasswordVisibility} />}
                   style={[styles.input,  mState && { backgroundColor: 'rgba(0, 0, 0, 0.1)'  }]}
                 />
 
                 {/* Password visibility changing eye button */}
-                <TouchableOpacity
-                  style={{
-                    marginTop: -45,
-                    marginLeft: 270,
-                  }}
-                  onPress={handlePasswordVisibility}
-                >
-                  <Icon name={rightIcon} size={20} color="black" />
-                </TouchableOpacity>
+
               </View>
               {errors.password && (
                 <Text style={styles.error}>{errors.password}</Text>
@@ -222,18 +217,10 @@ const CustomerSignUpForm = () => {
                   value={confirmPassword}
                   onChangeText={setconfirmPassword}
                   secureTextEntry={passwordVisibility}
+                  right={<TextInput.Icon icon={passwordVisibility ? 'eye-off' : 'eye'} onPress={handlePasswordVisibility} />}
                   style={[styles.input,  mState && { backgroundColor: 'rgba(0, 0, 0, 0.1)'  }]}
                 />
-                <TouchableOpacity
-                  style={{
-                    marginTop: -45,
-                    marginLeft: 270,
-                  }}
-                  onPress={handlePasswordVisibility}
-                >
-                  {/* eye icon  */}
-                  <Icon name={rightIcon} size={20} color="black" />
-                </TouchableOpacity>
+
               </View>
               {errors.confirmPassword && (
                 <Text style={styles.error}>{errors.confirmPassword}</Text>
@@ -305,19 +292,23 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingBottom: 32,
+  },
+  container: {
+    flex: 1,
   },
   innerContainer: {
     marginTop: 10,
     backgroundColor: "white",
-    paddingLeft:40,
-    paddingRight:40,
+    paddingHorizontal: 24,
+    maxWidth: 480,
+    alignSelf: 'center',
     // marginLeft: 40,
     // marginBottom:80,
     width: "100%", // Width set to make space for both sides.
     // height:'90%'
   },
   inputContainer: {
-    zIndex: -1,
     marginVertical: 8,
   },
   input: {

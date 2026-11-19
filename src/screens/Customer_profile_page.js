@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { getCustomerById, deleteCustomer } from "../services/CustomerService";
 import { useLogin } from "../context/LoginProvider";
-import { unregisterIndieDevice } from 'native-notify';
+import { unregisterIndieDevice } from '../services/PushNotifications';
 
 
 const Customer_profile_page = ({ navigation, route }) => {
